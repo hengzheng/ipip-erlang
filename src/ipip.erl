@@ -69,9 +69,11 @@ find({A,_B,_C,_D} = Ip, DbFile) ->
     % 此ip的ipindex的开始
     <<_:FirstIpOffset/binary, FirstIpIndex:32/little, _/binary>> = FirstIpBin,
     StartIpIndex = FirstIpIndex * 8,
-    % 此首ip段的ipindex数量
+
+    % ipindex数据
     <<_:StartIpIndex/binary, IpIndexData/binary>> = IpData,
 
+    % 查找数据
     LongIp = ntohl(Ip),
     case find_data_index(IpIndexData, LongIp, false) of
         {ok, DataOffset, DataLen} ->

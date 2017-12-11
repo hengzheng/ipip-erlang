@@ -5,8 +5,8 @@
 %% ------------- DAT struct -----------------------------------------------
 %%
 %% 1| 4 bytes 数据偏移 DataOffset | 1,2,3部分的长度
-%% 2| 256 * 4 ip首位对应的index偏移 |
-%%      每个index 8 bytes 指向3部分的ipindex数据:
+%% 2| 256 * 4 ip首位对应的index bits偏移 |
+%%      每个index 指向3部分的ipindex数据:
 %%      4 bytes Ip, 3 bytes offSet(指向4部分的数据偏移), 1 byte data len
 %% 3| DataOffset - 1028 ipindex数据 |
 %% 4| Data Address Info ip数据|
@@ -57,7 +57,7 @@ find({A,_B,_C,_D} = Ip, DbFile) ->
     {ok,FileBin} = file:read_file(DbFile),
 
     % 取出偏移量
-    <<OffsetLen:32, FirstIpBin:1024/binary, DataBin/binary>> = FileBin,
+    <<OffsetLen:4/binary, FirstIpBin:1024/binary, DataBin/binary>> = FileBin,
 
     % 分离ipindex数据和说明数据
     IpDataNum = OffsetLen - 1028,

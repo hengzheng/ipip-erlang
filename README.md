@@ -1,9 +1,11 @@
 # About ipip db
-| data offset | ip first section index   |              ipindex                     | data |  
-|  4 bytes    |     256 * 4 bytes        |          offset - 1028 bytes             |------|  
-|-------------| bits offset for ipindex  |4bytes ip |3 bytes offset|1 byte date len |------|  
-|-------------|--------------------------|--------- | point to data|----------------|------|  
-| big-endian  |     little-endian        |big-endian|little-endian | big-endian     |------|  
+| data offset | ip first section index | ipindex | data |
+|:---------:|:----------:|:-----------:|:---------:|
+| 4 bytes | 256 * 4 bytes | offset - 1028 bytes |------|
+|offset| ipindex offset (bits)|4bytes ip &#124;3 bytes offset&#124;1 byte date len |------|
+|------|point to ipindex|ip&#124;point to data&#124;len|----------------|------|
+| big-endian | little-endian |big-endian&#124;little-endian &#124; big-endian |------|
+
 Ip data: Counter\tProvine\tCity\t  
 step: find ip {A,B,C,D} in Data  
 0 Longip = (A bsl 24) bor (B bsl 16) bor (C bsl 8) bor D.  

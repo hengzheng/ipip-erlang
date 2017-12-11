@@ -3,7 +3,7 @@
 |:---------:|:----------:|:-----------:|:---------:|
 | 4 bytes | 256 * 4 bytes | offset - 1028 bytes |------|
 |offset| ipindex offset (bits)|4bytes ip &#124;3 bytes offset&#124;1 byte date len |------|
-|------|point to ipindex|ip&#124;point to data&#124;len|----------------|------|
+|------|point to ipindex|ip&#124;point to data&#124;len|------|------|
 | big-endian | little-endian |big-endian&#124;little-endian &#124; big-endian |------|
 
 Ip data: Counter\tProvine\tCity\t  

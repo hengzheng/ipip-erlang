@@ -57,7 +57,7 @@ find({A,_B,_C,_D} = Ip, DbFile) ->
     {ok,FileBin} = file:read_file(DbFile),
 
     % 取出偏移量
-    <<OffsetLen:4/binary, FirstIpBin:1024/binary, DataBin/binary>> = FileBin,
+    <<OffsetLen:4/unit:8, FirstIpBin:1024/binary, DataBin/binary>> = FileBin,
 
     % 分离ipindex数据和说明数据
     IpDataNum = OffsetLen - 1028,
@@ -67,7 +67,7 @@ find({A,_B,_C,_D} = Ip, DbFile) ->
     FirstIpOffset = A * 4,
 
     % 此ip的ipindex的开始
-    <<_:FirstIpOffset/binary, FirstIpIndex:32/little, _/binary>> = FirstIpBin,
+    <<_:FirstIpOffset/binary, FirstIpIndex:4/little-unit:8, _/binary>> = FirstIpBin,
     StartIpIndex = FirstIpIndex * 8,
 
     % ipindex数据
@@ -86,7 +86,7 @@ find({A,_B,_C,_D} = Ip, DbFile) ->
     end.
 
 %% 二分查找
-find_data_index(<<DataLongIp:32, DataOffset:24/little, DataLen>>, LongIp, Ret) ->
+find_data_index(<<DataLongIp:4/unit:8, DataOffset:3/little-unit:8, DataLen>>, LongIp, Ret) ->
     if  DataLongIp >= LongIp ->
             {ok, DataOffset, DataLen};
         true ->
@@ -96,7 +96,7 @@ find_data_index(Data, LongIp, Ret) ->
     MidOffset = size(Data) div 8 div 2 * 8,
     case Data of
         <<Head:MidOffset/binary, IpInfo:8/binary, Rest/binary>> ->
-            <<DataLongIp:32, DataOffset:24/little, DataLen>> = IpInfo,
+            <<DataLongIp:4/unit:8, DataOffset:3/little-unit:8, DataLen>> = IpInfo,
             if  DataLongIp < LongIp ->
                     find_data_index(Rest, LongIp, Ret);
                 true -> % 有满足的先记录，但不一定是最接近的
@@ -106,7 +106,7 @@ find_data_index(Data, LongIp, Ret) ->
             Ret
     end.
 %% 按顺序查找
-%find_data_index(<<DataLongIp:32, DataOffset:24/little, DataLen, Rest/binary>>, LongIp) ->
+%find_data_index(<<DataLongIp:4/unit:8, DataOffset:3/little-unit:8, DataLen, Rest/binary>>, LongIp) ->
 %    if  DataLongIp < LongIp ->
 %            find_data_index(Rest, LongIp);
 %        true ->
